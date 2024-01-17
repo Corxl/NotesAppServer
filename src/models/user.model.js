@@ -4,7 +4,6 @@ const userSchema = new Schema(
 		username: { type: String },
 		email: { type: String },
 		password: { type: String, select: false },
-		authTokens: [{ type: String }],
 	},
 	{ timestamps: true }
 );
