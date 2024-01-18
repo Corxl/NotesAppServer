@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import MongoStore from 'connect-mongo';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import session from 'express-session';
@@ -15,7 +16,11 @@ dotenv.config();
 
 // const MongoStore = require('connect-mongo')(session);
 // MongoStore(session);
-
+app.use(cors({ 
+	origin: ["http://localhost:3001"],
+	methods: ["GET", "POST", "PUT", "DELETE"], 
+	credentials: true 
+}));
 app.use(
 	session({
 		name: 'login auth',
@@ -52,6 +57,6 @@ app.use(parser);
 app.use('/users', userRouter);
 
 
-http.createServer(app).listen(3000, () => {
-    console.log('Listening on port 3000');
+http.createServer(app).listen(3001, () => {
+    console.log('Listening on port 3001');
 });
