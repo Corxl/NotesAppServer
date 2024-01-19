@@ -126,6 +126,18 @@ router.post("/deleteNote", userAuth, async (req, res) => {
     }
 });
 
+router.get("/isAuth", async (req, res) => {
+    try {
+        if (req.session.isAuth) {
+            res.status(200).send({ msg: 'Authenticated.' });
+            return;
+        }
+        res.status(401).send({ msg: 'Not authenticated.' });
+    } catch (err) {
+        res.status(400).send({ msg: 'Bad Request.' });
+    }
+});
+
 router.get("/protected", userAuth, async (req, res) => {
     console.log(req.session.user)
     res.json({msg: 'You are authenticated!'});
