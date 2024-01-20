@@ -12,21 +12,32 @@ import { User } from './models/user.model.js';
 
 const app = express();
 const parser = bodyParser.json(); 
-dotenv.config();
+dotenv.config(); 
 
-// const MongoStore = require('connect-mongo')(session);
-// MongoStore(session);
-app.use(cors({ 
-	origin: ["http://localhost:3001"],
-	methods: ["GET", "POST", "PUT", "DELETE"], 
-	credentials: true 
-}));
+// Might not need this.
+app.use(function (req, res, next) {
+	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+	res.setHeader('Access-Control-Allow-Headers', '*');
+	res.header('Access-Control-Allow-Credentials', true);
+	next();
+});
+
+app.use(
+	cors({
+		origin: ["*"],
+		methods: ['GET', 'POST', 'PUT', 'DELETE'],
+		credentials: true,
+		optionSuccessStatus: 200,
+	})
+);
+
 app.use(
 	session({
-		name: 'login auth',
+		name: 'login',
 		secret: process.env.SESSION_SECRET,
 		cookie: { maxAge: 60000 },
-		resave: true,
+		resave: false,
+		httpOnly: false,
 		saveUninitialized: false,
 		store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
 	})

@@ -41,6 +41,7 @@ router.post("/logout", async (req, res) => {
     try {
         req.session.destroy();
         res.status(200).send({ msg: 'Logged out.' });
+        console.log(`User(${req.session.user.username}) logged out.`);
     } catch (err) {
         res.status(400).send({ msg: 'Bad Request.' });
     }
@@ -84,58 +85,67 @@ router.post("/register", async (req, res) => {
 router.get("/getNotes", userAuth, async (req, res) => {
     try {
         const { user } = req.session;
-        const notes = await User.findById(user._id).populate('notes');
-        res.status(200).json(notes);
+        const u = await User.findById(user._id).populate('notes');
+        res.status(200).json(u.notes);
     } catch (err) {
-        res.status(400).send({ msg: 'Bad Request.' });
+        res.status(500).send({ msg: 'Server Error.' });
     }
 });
 
 router.post("/addNote", userAuth, async (req, res) => {
     try {
         const { user } = req.session;
-        const { title, content } = req.body;
-        if (!title || !content) {
-            res.status(400).send({ msg: 'Bad Request.' });
-            return;
-        }
         const note = await Note.create({
-            title: title,
-            content: content,
+            title: "Untitled Note",
+            content: " ",
+            owner: user._id,
         });
         await User.findByIdAndUpdate(user._id, { $push: { notes: note._id } });
-        res.status(200).json(note);
+        res.status(200).json({title: note.title, content: note.content, id: note._id});
+        console.log(`Note: ${note._id} added.`)
     } catch (err) {
-        res.status(400).send({ msg: 'Bad Request.' });
+        console.log("failed to add note.")
+        console.log(err);
+        res.status(500).send({ msg: 'Server Error.' });
     }
 });
 
-router.post("/deleteNote", userAuth, async (req, res) => {
+router.post("/deleteNote/:id", userAuth, async (req, res) => {
     try {
         const { user } = req.session;
-        const { noteId } = req.body;
+        const noteId = req.params.id;
         if (!noteId) {
             res.status(400).send({ msg: 'Bad Request.' });
             return;
         }
         await Note.findByIdAndDelete(noteId);
         await User.findByIdAndUpdate(user._id, { $pull: { notes: noteId } });
+        console.log(`Note: ${noteId} deleted.`)
         res.status(200).send({ msg: 'Note deleted.' });
     } catch (err) {
-        res.status(400).send({ msg: 'Bad Request.' });
+        console.log(err);
+        res.status(404).send({ msg: 'Note not found.' });
     }
 });
 
-router.get("/isAuth", async (req, res) => {
+router.post("/updateNote/:id", userAuth, async (req, res) => {
     try {
-        if (req.session.isAuth) {
-            res.status(200).send({ msg: 'Authenticated.' });
+        const noteId = req.params.id;
+        const { title, content } = req.body;
+        if (!noteId || !title || !content) {
+            res.status(400).send({ msg: 'Bad Request.' });
             return;
         }
-        res.status(401).send({ msg: 'Not authenticated.' });
+        await Note.findByIdAndUpdate(noteId, { title: title, content: content });
+        console.log(`Note: ${noteId} updated.`)
+        res.status(200).send({ msg: 'Note updated.' });
     } catch (err) {
-        res.status(400).send({ msg: 'Bad Request.' });
+        res.status(404).send({ msg: 'Note not found.' });
     }
+});
+
+router.get("/isAuth", userAuth, async (req, res) => { 
+    res.status(200).json({msg: "Authenticated."});
 });
 
 router.get("/protected", userAuth, async (req, res) => {
