@@ -19,8 +19,9 @@ Your `MONGO_URI` should look something like this: `mongodb://sally:sallyspasswor
 
 
 4. Run server
+
 `
-  npm start
+npm start
 `
 
   or to listen to changes: 
