@@ -17,15 +17,13 @@ This is the server side of the [Notes App](https://github.com/Corxl/NotesAppClie
 
   Your `MONGO_URI` should look something like this: `mongodb://sally:sallyspassword@dbserver.example:5555/userdata?...`
 
+## Start Server
+Run: `npm start`
 
-4. Run server
+or to listen to changes: `npm run dev`
 
-`
-npm start
-`
 
-  or to listen to changes: 
 
-`
-  npm run dev
-`
+   
+
+
