@@ -9,6 +9,7 @@ This is the server side of the [Notes App](https://github.com/Corxl/NotesAppClie
 `
 npm install
 `
+
 2. Create `.env` file
 
 3.Add following lines into `.env`
