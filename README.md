@@ -21,11 +21,14 @@ Your `SESSION_SECRET` can be any random string
 
 Your `MONGO_URI` should look something like this: `mongodb://sally:sallyspassword@dbserver.example:5555/userdata?tls=true&connectionTimeout=5000`
 
-2. Run server
+
+3. Run server
 `
 npm start
 `
+
 or to listen to changes: 
+
 `
 npm run dev
 `
