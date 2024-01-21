@@ -12,9 +12,9 @@ npm install
 2. Create `.env` file
 
 3.Add following lines into `.env`
-> SESSION_SECRET:"<your-auth-sesson-secret>"
+> SESSION_SECRET:`your-auth-sesson-secret`
 
-> MONGO_URI: "<mongoDB-uri>"
+> MONGO_URI: `mongoDB-uri`
 
 Your `SESSION_SECRET` can be any random string
 
