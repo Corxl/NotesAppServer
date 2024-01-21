@@ -13,9 +13,9 @@ This is the server side of the [Notes App](https://github.com/Corxl/NotesAppClie
 
   > MONGO_URI: `mongoDB-uri`
 
-Your `SESSION_SECRET` can be any random string
+     Your `SESSION_SECRET` can be any random string
 
-Your `MONGO_URI` should look something like this: `mongodb://sally:sallyspassword@dbserver.example:5555/userdata?...`
+     Your `MONGO_URI` should look something like this: `mongodb://sally:sallyspassword@dbserver.example:5555/userdata?...`
 
 
 4. Run server
