@@ -36,7 +36,7 @@ app.use(
 		name: 'login',
 		secret: process.env.SESSION_SECRET,
 		cookie: { maxAge: 60000 },
-		resave: false,
+		resave: true,
 		httpOnly: false,
 		saveUninitialized: false,
 		store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),

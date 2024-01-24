@@ -1,8 +1,8 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import { userAuth } from '../middleware/userAuth.js';
-import { User } from '../models/user.model.js';
 import { Note } from '../models/note.model.js';
+import { User } from '../models/user.model.js';
 
 const router = express.Router();
 const parser = bodyParser.json();
@@ -37,13 +37,13 @@ router.post("/login", async (req, res) => {
     }
 }); 
 
-router.post("/logout", async (req, res) => {
-    try {
+router.post("/logout", userAuth, async (req, res) => {
+    try { 
+        console.log(`User(${req.session.user.username}) logged out.`); 
         req.session.destroy();
         res.status(200).send({ msg: 'Logged out.' });
-        console.log(`User(${req.session.user.username}) logged out.`);
     } catch (err) {
-        res.status(400).send({ msg: 'Bad Request.' });
+        res.status(400).send({ msg: 'Bad Request.' }); 
     }
 });
 
@@ -110,18 +110,28 @@ router.post("/addNote", userAuth, async (req, res) => {
     }
 });
 
-router.post("/deleteNote/:id", userAuth, async (req, res) => {
+router.post("/deleteNote", userAuth, async (req, res) => {
     try {
         const { user } = req.session;
         const noteId = req.params.id;
-        if (!noteId) {
+        const { notesToDelete } = req.body;
+        if (!notesToDelete) {
             res.status(400).send({ msg: 'Bad Request.' });
             return;
         }
-        await Note.findByIdAndDelete(noteId);
-        await User.findByIdAndUpdate(user._id, { $pull: { notes: noteId } });
-        console.log(`Note: ${noteId} deleted.`)
-        res.status(200).send({ msg: 'Note deleted.' });
+        if (notesToDelete.length === 0) {
+            res.status(200).send({ msg: 'No notes to delete.' });
+            return;
+        } 
+        const notes = await Note.find({ _id: { $in: notesToDelete } });
+        console.log(notes);
+        //await Note.deleteMany({ _id: { $in: notesToDelete } });
+        res.status(200);
+        
+        
+        //res.status(200).send({ msg: 'Note deleted.' });
+        return;
+
     } catch (err) {
         console.log(err);
         res.status(404).send({ msg: 'Note not found.' });
