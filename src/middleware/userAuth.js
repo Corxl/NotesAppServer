@@ -1,9 +1,10 @@
-function userAuth (req, res, next) {
-    console.log('Authenticating user...\n' + req.sessionID);
+function userAuth (req, res, next) { 
     if (!req.session.isAuth) {
         res.status(401).json('Unauthorized'); 
+        console.log(`Unauthorized | ${req.sessionID}`);
         return;
     } 
+    console.log(`Authorized | ${req.sessionID}`);
     next();
 }
 

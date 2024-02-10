@@ -29,7 +29,7 @@ app.use(
 		credentials: true,
 		optionSuccessStatus: 200,
 	})
-);
+); 
 
 app.use(
 	session({
@@ -38,7 +38,7 @@ app.use(
 		cookie: { maxAge: 60000 },
 		resave: true,
 		httpOnly: false,
-		saveUninitialized: false,
+		saveUninitialized: true,
 		store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
 	})
 );

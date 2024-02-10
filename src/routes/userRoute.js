@@ -139,16 +139,23 @@ router.post("/deleteNote", userAuth, async (req, res) => {
 });
 
 router.post("/updateNote/:id", userAuth, async (req, res) => {
+    console.log("updateNote");
     try {
         const noteId = req.params.id;
         const { title, content } = req.body;
-        if (!noteId || !title || !content) {
+        console.log(req.body);
+        if (!noteId) {
             res.status(400).send({ msg: 'Bad Request.' });
             return;
         }
-        await Note.findByIdAndUpdate(noteId, { title: title, content: content });
-        console.log(`Note: ${noteId} updated.`)
-        res.status(200).send({ msg: 'Note updated.' });
+        const note = await Note.findById(noteId); 
+        if (title) note.title = title;
+        if (content) note.contents = content;
+        note.save();
+        console.log(note);
+        // await Note.findByIdAndUpdate(noteId, { title: title, content: content }); 
+        // console.log(`Note: ${noteId} updated.`)
+        res.status(200).send({ note: { title: note.title, content: note.contents } });
     } catch (err) {
         res.status(404).send({ msg: 'Note not found.' });
     }
