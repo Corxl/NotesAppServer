@@ -138,17 +138,19 @@ router.post("/deleteNote", userAuth, async (req, res) => {
     }
 });
 
-router.post("/updateNote/:id", userAuth, async (req, res) => {
+router.post("/updateNote", userAuth, async (req, res) => {
     console.log("updateNote");
     try {
-        const noteId = req.params.id;
-        const { title, content } = req.body;
+        const { title, content, id } = req.body;
+        console.log(id);
+        console.log(req.params)
         console.log(req.body);
-        if (!noteId) {
+        if (!id) {
+            console.log("no id");
             res.status(400).send({ msg: 'Bad Request.' });
             return;
         }
-        const note = await Note.findById(noteId); 
+        const note = await Note.findById(id); 
         if (title) note.title = title;
         if (content) note.contents = content;
         note.save();
