@@ -24,10 +24,18 @@ app.use(function (req, res, next) {
 
 app.use(
 	cors({
-		origin: ["http://localhost:3000"],
-		methods: ["GET", "POST", "PUT", "DELETE"],
+		origin: ['http://localhost:3000'],
+		methods: ['GET', 'POST', 'PUT', 'DELETE'],
 		credentials: true,
 		optionSuccessStatus: 200,
+		api: {
+			allowedHeaders: [
+				'Content-Type',
+				'Authorization',
+				'Access-Control-Allow-Credentials',
+			],
+			exposedHeaders: ['Authorization'],
+		},
 	})
 ); 
 
@@ -36,9 +44,9 @@ app.use(
 		name: 'login',
 		secret: process.env.SESSION_SECRET,
 		cookie: { maxAge: 60000 },
-		resave: true,
+		resave: false,
 		httpOnly: false,
-		saveUninitialized: true,
+		saveUninitialized: false,
 		store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
 	})
 );
