@@ -92,6 +92,21 @@ router.get("/getNotes", userAuth, async (req, res) => {
     }
 });
 
+router.get("/getNote/:id", userAuth, async (req, res) => {
+    try {
+        const { user } = req.session;
+        const noteId = req.params.id;
+        const note = await Note.findById(noteId);
+        if (!note) {
+            res.status(404).send({ msg: 'Note not found.' });
+            return;
+        }
+        res.status(200).json(note);
+    } catch (err) {
+        res.status(404).send({ msg: 'Note not found.' });
+    }
+});
+
 router.post("/addNote", userAuth, async (req, res) => {
     try {
         const { user } = req.session;
