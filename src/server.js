@@ -14,13 +14,13 @@ const app = express();
 const parser = bodyParser.json(); 
 dotenv.config(); 
 
-// Might not need this.
-app.use(function (req, res, next) {
-	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-	res.setHeader('Access-Control-Allow-Headers', '*');
-	res.header('Access-Control-Allow-Credentials', true);
-	next();
-});
+// // Might not need this.
+// app.use(function (req, res, next) {
+// 	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+// 	res.setHeader('Access-Control-Allow-Headers', '*');
+// 	res.header('Access-Control-Allow-Credentials', true);
+// 	next();
+// });
 
 app.use(
 	cors({
@@ -43,7 +43,7 @@ app.use(
 	session({
 		name: 'login',
 		secret: process.env.SESSION_SECRET,
-		cookie: { maxAge: 60000 },
+		cookie: { maxAge: 365 * 24 * 60 * 60 * 1000 }, // 1 year
 		resave: false,
 		httpOnly: false,
 		saveUninitialized: false,
