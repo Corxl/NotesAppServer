@@ -142,7 +142,7 @@ router.post("/updateNote", userAuth, async (req, res) => {
     console.log("updateNote");
     try {
         const { title, content, id } = req.body;
-        console.log(id);
+        console.log(id); 
         console.log(req.params)
         console.log(req.body);
         if (!id) {

@@ -24,8 +24,8 @@ app.use(function (req, res, next) {
 
 app.use(
 	cors({
-		origin: ["*"],
-		methods: ['GET', 'POST', 'PUT', 'DELETE'],
+		origin: ["http://localhost:3000"],
+		methods: ["GET", "POST", "PUT", "DELETE"],
 		credentials: true,
 		optionSuccessStatus: 200,
 	})
