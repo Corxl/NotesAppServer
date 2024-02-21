@@ -154,10 +154,11 @@ router.post("/deleteNote", userAuth, noteAuth, async (req, res) => {
     }
 });
 
-router.post('/updateNote', userAuth, noteAuth, async (req, res) => {
+router.post('/updateNote/:id', userAuth, noteAuth, async (req, res) => {
 	console.log('updateNote');
 	try {
-		const { title, content, id } = req.body;
+		const { title, content } = req.body;
+        const id = req.params.id;
 		console.log(id);
 		console.log(req.params);
 		console.log(req.body);
