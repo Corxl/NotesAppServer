@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
+import { noteAuth } from '../middleware/noteAuth.js';
 import { userAuth } from '../middleware/userAuth.js';
 import { Note } from '../models/note.model.js';
 import { User } from '../models/user.model.js';
@@ -92,19 +93,19 @@ router.get("/getNotes", userAuth, async (req, res) => {
     }
 });
 
-router.get("/getNote/:id", userAuth, async (req, res) => {
-    try {
-        const { user } = req.session;
-        const noteId = req.params.id;
-        const note = await Note.findById(noteId);
-        if (!note) {
-            res.status(404).send({ msg: 'Note not found.' });
-            return;
-        }
-        res.status(200).json(note);
-    } catch (err) {
-        res.status(404).send({ msg: 'Note not found.' });
-    }
+router.get('/getNote/:id', userAuth, noteAuth, async (req, res) => {
+	try {
+		const { user } = req.session;
+		const noteId = req.params.id;
+		const note = await Note.findById(noteId);
+		if (!note) {
+			res.status(404).send({ msg: 'Note not found.' });
+			return;
+		}
+		res.status(200).json(note);
+	} catch (err) {
+		res.status(404).send({ msg: 'Note not found.' });
+	}
 });
 
 router.post("/addNote", userAuth, async (req, res) => {
@@ -125,7 +126,7 @@ router.post("/addNote", userAuth, async (req, res) => {
     }
 });
 
-router.post("/deleteNote", userAuth, async (req, res) => {
+router.post("/deleteNote", userAuth, noteAuth, async (req, res) => {
     try {
         const { user } = req.session;
         const noteId = req.params.id;
@@ -153,29 +154,31 @@ router.post("/deleteNote", userAuth, async (req, res) => {
     }
 });
 
-router.post("/updateNote", userAuth, async (req, res) => {
-    console.log("updateNote");
-    try {
-        const { title, content, id } = req.body;
-        console.log(id); 
-        console.log(req.params)
-        console.log(req.body);
-        if (!id) {
-            console.log("no id");
-            res.status(400).send({ msg: 'Bad Request.' });
-            return;
-        }
-        const note = await Note.findById(id); 
-        if (title) note.title = title;
-        if (content) note.contents = content;
-        note.save();
-        console.log(note);
-        // await Note.findByIdAndUpdate(noteId, { title: title, content: content }); 
-        // console.log(`Note: ${noteId} updated.`)
-        res.status(200).send({ note: { title: note.title, content: note.contents } });
-    } catch (err) {
-        res.status(404).send({ msg: 'Note not found.' });
-    }
+router.post('/updateNote', userAuth, noteAuth, async (req, res) => {
+	console.log('updateNote');
+	try {
+		const { title, content, id } = req.body;
+		console.log(id);
+		console.log(req.params);
+		console.log(req.body);
+		if (!id) {
+			console.log('no id');
+			res.status(400).send({ msg: 'Bad Request.' });
+			return;
+		}
+		const note = await Note.findById(id);
+		if (title) note.title = title;
+		if (content) note.contents = content;
+		note.save();
+		console.log(note);
+		// await Note.findByIdAndUpdate(noteId, { title: title, content: content });
+		// console.log(`Note: ${noteId} updated.`)
+		res
+			.status(200)
+			.send({ note: { title: note.title, content: note.contents } });
+	} catch (err) {
+		res.status(404).send({ msg: 'Note not found.' });
+	}
 });
 
 router.get("/isAuth", userAuth, async (req, res) => { 
