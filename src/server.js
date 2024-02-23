@@ -75,6 +75,9 @@ app.use(parser);
 
 app.use('/users', userRouter);
 
+app.use('/ping', (req, res) => {
+	res.status(200).send('pong');
+});
 
 http.createServer(app).listen(3001, () => {
     console.log('Listening on port 3001');
